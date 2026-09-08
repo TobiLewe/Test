@@ -195,22 +195,22 @@ const quizzes = [
     {
       "thema": "Nyquist-Filter",
       "frage": "Was versteht man unter einem Nyquist-Filter und warum ist er wichtig in der Basisbandübertragung?",
-      "antwort": "Antwort 1"
+      "antwort": "Ein Nyquist-Filter ist ein Filter, dessen Impulsantwort so gestaltet ist, dass sich die übertragenen Symbole zum Abtastzeitpunkt nicht gegenseitig beeinflussen. Dadurch wird Intersymbolinterferenz (ISI) vermieden und eine fehlerfreie Symbolentscheidung ermöglicht."
     },
     {
       "thema": "RRC-Aufteilung",
       "frage": "Warum wird das Raised-Cosine-Filter in zwei Root-Raised-Cosine-Filter aufgeteilt?",
-      "antwort": "Antwort 2"
+      "antwort": "Das Raised-Cosine-Filter wird in zwei Root-Raised-Cosine-Filter aufgeteilt, damit ein Filter beim Sender und ein Filter beim Empfänger eingesetzt werden kann und sich beide zusammen zu einem Raised-Cosine-Filter ergänzen. Dadurch wird das Signal bandbegrenzt und gleichzeitig Intersymbolinterferenz (ISI) vermieden."
     },
     {
       "thema": "Faltung im Frequenzbereich",
       "frage": "Wie funktioniert die Faltung im Frequenzbereich und was bedeutet das für die Modulation?",
-      "antwort": "Antwort 3"
+      "antwort": `Bei der Faltung im Zeitbereich werden zwei Signale miteinander verknüpft, wobei die Faltung im Frequenzbereich einer Multiplikation der jeweiligen Frequenzspektren entspricht. Für die Modulation bedeutet dies, dass durch die Multiplikation des Basisbandsignals mit einem Trägersignal dessen Spektrum in den Bereich der Trägerfrequenz verschoben wird, wodurch aus dem ursprünglichen Basisbandsignal ein Bandpasssignal entsteht.`
     },
     {
       "thema": "AM",
       "frage": "Erklären Sie das Prinzip der Amplitudenmodulation (AM).",
-      "antwort": "Antwort 4"
+      "antwort": "Bei der Amplitudenmodulation (AM) wird die Amplitude eines hochfrequenten Trägersignals entsprechend dem Verlauf des Nachrichtensignals verändert, während die Trägerfrequenz und die Phase im Idealfall konstant bleiben. Dadurch wird das Nachrichtensignal auf den Träger aufmoduliert und kann als Bandpasssignal übertragen werden."
     },
     {
       "thema": "Spektrumsverschiebung",
