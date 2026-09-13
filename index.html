@@ -19,6 +19,39 @@
     <div class="quiz-layout">
       <aside class="fragen-index">
         <h2>Fragen</h2>
+
+        <div class="lernstatus">
+          <div class="lernstatus-kopf">
+            <span>Lernfortschritt</span>
+            <strong id="lernfortschritt">0 / 13</strong>
+          </div>
+          <div class="fortschrittsbalken" aria-hidden="true">
+            <div id="fortschrittsbalken"></div>
+          </div>
+          <div class="lernstatus-zahlen">
+            <span id="offeneFragen">13 offen</span>
+            <span id="gelernteFragen">0 gelernt</span>
+          </div>
+        </div>
+
+        <div class="listen-werkzeuge">
+          <div class="filter-buttons" role="group" aria-label="Fragen filtern">
+            <button type="button" class="filter-button aktiv" data-filter="alle">Alle</button>
+            <button type="button" class="filter-button" data-filter="offen">Offen</button>
+            <button type="button" class="filter-button" data-filter="gelernt">Gelernt</button>
+          </div>
+          <label class="sortierung">
+            Sortierung
+            <select id="sortierung">
+              <option value="nummer">Fragenreihenfolge</option>
+              <option value="offen">Offene zuerst</option>
+              <option value="gelernt">Gelernte zuerst</option>
+              <option value="thema">Nach Thema</option>
+            </select>
+          </label>
+        </div>
+
+        <button type="button" id="naechsteOffene">Nächste offene Frage</button>
         <div id="fragenListe"></div>
         <button type="button" id="fragenZuruecksetzen">Markierungen zurücksetzen</button>
       </aside>

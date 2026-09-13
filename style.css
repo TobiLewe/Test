@@ -333,3 +333,145 @@ button.frage-status.gelernt:active {
   margin: 15px auto 0;
   border-radius: 8px;
 }
+
+
+/* Lernsystem */
+.lernstatus {
+  margin: 0 0 14px;
+  padding: 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.lernstatus-kopf,
+.lernstatus-zahlen {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.lernstatus-kopf {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.lernstatus-kopf strong {
+  font-size: 14px;
+}
+
+.fortschrittsbalken {
+  height: 8px;
+  background: #e2e2e2;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+#fortschrittsbalken {
+  width: 0;
+  height: 100%;
+  background: #3a9d5d;
+  border-radius: inherit;
+  transition: width 0.2s ease;
+}
+
+.lernstatus-zahlen {
+  margin-top: 7px;
+  color: #666;
+  font-size: 12px;
+}
+
+.listen-werkzeuge {
+  display: grid;
+  gap: 9px;
+  margin-bottom: 10px;
+}
+
+.filter-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+
+.filter-button {
+  min-height: 36px;
+  padding: 0 6px;
+  border-radius: 8px;
+  background: #eee;
+  color: #333;
+  font-size: 13px;
+}
+
+.filter-button:hover {
+  opacity: 1;
+  background: #ddd;
+}
+
+.filter-button.aktiv {
+  background: #555;
+  color: white;
+}
+
+.sortierung {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 12px;
+}
+
+.sortierung select {
+  width: 100%;
+  min-height: 36px;
+  padding: 0 8px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  background: white;
+  color: #222;
+  font-size: 13px;
+}
+
+#naechsteOffene {
+  min-height: 40px;
+  margin-bottom: 10px;
+  background: #3a9d5d;
+  font-size: 14px;
+}
+
+#naechsteOffene:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.frage-link.ist-gelernt {
+  background: #edf7f0;
+}
+
+.frage-link.ist-gelernt:hover {
+  background: #e3f1e7;
+}
+
+.frage-link.ist-gelernt.aktiv {
+  background: #555;
+  color: white;
+}
+
+.keine-fragen {
+  padding: 14px 8px;
+  text-align: center;
+  color: #666;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+@media (max-width: 800px) {
+  .filter-button {
+    min-height: 40px;
+  }
+
+  #naechsteOffene {
+    margin-bottom: 10px;
+  }
+}

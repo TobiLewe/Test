@@ -219,7 +219,7 @@ const quizzes = [
     },
     {
       "thema": "Konjugiert-symmetrisches Spektrum",
-      "frage": "Warum ist das Spektrum eines realen Signals konjugiert-symmetrisch?",
+      "frage": "Das Spektrum eines reellen Signals ist konjugiert-symmetrisch, damit sich die imaginären Anteile der positiven und negativen Frequenzkomponenten gegenseitig aufheben und nach der Rücktransformation wieder ein reelles Signal entsteht.",
       "antwort": "Das Spektrum eines reellen Signals ist konjugiert-symmetrisch, damit sich die imaginären Anteile der positiven und negativen Frequenzkomponenten gegenseitig aufheben und nach der Rücktransformation wieder ein reelles Signal entsteht."
     },
     {
@@ -254,7 +254,7 @@ const quizzes = [
     },
     {
       "thema": "FM & LTI",
-      "frage": "Warum ist FM kein LTI-System?",
+      "frage": "Welche Vorteile bietet die Frequenzmodulation gegenüber AM?",
       "antwort": "FM ist kein LTI-System, weil die Ausgangsgröße nicht linear vom Eingangssignal abhängt: Das Nachrichtensignal verändert die Frequenz bzw. die Phase innerhalb einer Cosinusfunktion, sodass das Superpositionsprinzip nicht erfüllt ist."
     },
     {
@@ -488,7 +488,17 @@ const weiterButton = document.getElementById("weiterButton");
 const quizButtons = document.querySelectorAll(".quiz-button");
 
 const fragenListe = document.getElementById("fragenListe");
+const lernfortschrittElement = document.getElementById("lernfortschritt");
+const fortschrittsbalkenElement = document.getElementById("fortschrittsbalken");
+const offeneFragenElement = document.getElementById("offeneFragen");
+const gelernteFragenElement = document.getElementById("gelernteFragen");
+const filterButtons = document.querySelectorAll(".filter-button");
+const sortierungElement = document.getElementById("sortierung");
+const naechsteOffeneButton = document.getElementById("naechsteOffene");
+
 let gespeicherteMarkierungen = null;
+let aktuellerFilter = "alle";
+let aktuelleSortierung = "nummer";
 
 try {
   gespeicherteMarkierungen = JSON.parse(
@@ -509,11 +519,69 @@ function speichereMarkierungen() {
   localStorage.setItem("quizGelernt", JSON.stringify(gelernt));
 }
 
+function aktualisiereLernstatus() {
+  const quiz = quizzes[aktuellesQuiz];
+  const anzahlGelernt = gelernt[aktuellesQuiz].filter(Boolean).length;
+  const anzahlOffen = quiz.length - anzahlGelernt;
+  const prozent = quiz.length ? (anzahlGelernt / quiz.length) * 100 : 0;
+
+  lernfortschrittElement.textContent = `${anzahlGelernt} / ${quiz.length}`;
+  fortschrittsbalkenElement.style.width = `${prozent}%`;
+  offeneFragenElement.textContent = `${anzahlOffen} offen`;
+  gelernteFragenElement.textContent = `${anzahlGelernt} gelernt`;
+
+  naechsteOffeneButton.disabled = anzahlOffen === 0;
+  naechsteOffeneButton.textContent =
+    anzahlOffen === 0 ? "Alle Fragen gelernt ✓" : "Nächste offene Frage";
+}
+
+function sortierteFragen(quiz) {
+  const eintraege = quiz.map((item, index) => ({ item, index }));
+
+  if (aktuelleSortierung === "offen") {
+    eintraege.sort((a, b) => {
+      const aGelernt = gelernt[aktuellesQuiz][a.index];
+      const bGelernt = gelernt[aktuellesQuiz][b.index];
+      return Number(aGelernt) - Number(bGelernt) || a.index - b.index;
+    });
+  } else if (aktuelleSortierung === "gelernt") {
+    eintraege.sort((a, b) => {
+      const aGelernt = gelernt[aktuellesQuiz][a.index];
+      const bGelernt = gelernt[aktuellesQuiz][b.index];
+      return Number(bGelernt) - Number(aGelernt) || a.index - b.index;
+    });
+  } else if (aktuelleSortierung === "thema") {
+    eintraege.sort((a, b) =>
+      (a.item.thema || "Frage").localeCompare(b.item.thema || "Frage", "de") ||
+      a.index - b.index
+    );
+  }
+
+  return eintraege;
+}
+
 function aktualisiereFragenListe() {
   const quiz = quizzes[aktuellesQuiz];
   fragenListe.innerHTML = "";
 
-  quiz.forEach((item, index) => {
+  const eintraege = sortierteFragen(quiz).filter(({ index }) => {
+    if (aktuellerFilter === "offen") return !gelernt[aktuellesQuiz][index];
+    if (aktuellerFilter === "gelernt") return gelernt[aktuellesQuiz][index];
+    return true;
+  });
+
+  if (eintraege.length === 0) {
+    const leer = document.createElement("div");
+    leer.className = "keine-fragen";
+    leer.textContent = aktuellerFilter === "gelernt"
+      ? "Noch keine Frage als gelernt markiert."
+      : "Alle Fragen sind gelernt. ✓";
+    fragenListe.appendChild(leer);
+    aktualisiereLernstatus();
+    return;
+  }
+
+  eintraege.forEach(({ item, index }) => {
     const zeile = document.createElement("div");
     zeile.className = "frage-zeile";
 
@@ -522,14 +590,19 @@ function aktualisiereFragenListe() {
     frageButton.className = "frage-link";
     frageButton.textContent = (index + 1) + ". " + (item.thema || "Frage");
     frageButton.title = item.frage;
-    frageButton.addEventListener("click", () => {
-      aktuelleFrage = index;
-      anzeigen();
-    });
 
     if (index === aktuelleFrage) {
       frageButton.classList.add("aktiv");
     }
+
+    if (gelernt[aktuellesQuiz][index]) {
+      frageButton.classList.add("ist-gelernt");
+    }
+
+    frageButton.addEventListener("click", () => {
+      aktuelleFrage = index;
+      anzeigen();
+    });
 
     const statusButton = document.createElement("button");
     statusButton.type = "button";
@@ -538,12 +611,14 @@ function aktualisiereFragenListe() {
     statusButton.title = gelernt[aktuellesQuiz][index]
       ? "Als ungelernt markieren"
       : "Als gelernt markieren";
+    statusButton.setAttribute("aria-label", statusButton.title);
 
     if (gelernt[aktuellesQuiz][index]) {
       statusButton.classList.add("gelernt");
     }
 
-    statusButton.addEventListener("click", () => {
+    statusButton.addEventListener("click", (event) => {
+      event.stopPropagation();
       gelernt[aktuellesQuiz][index] = !gelernt[aktuellesQuiz][index];
       speichereMarkierungen();
       aktualisiereFragenListe();
@@ -553,7 +628,39 @@ function aktualisiereFragenListe() {
     zeile.appendChild(statusButton);
     fragenListe.appendChild(zeile);
   });
+
+  aktualisiereLernstatus();
 }
+
+function naechsteOffeneFrage() {
+  const quiz = quizzes[aktuellesQuiz];
+
+  for (let offset = 1; offset <= quiz.length; offset++) {
+    const index = (aktuelleFrage + offset) % quiz.length;
+    if (!gelernt[aktuellesQuiz][index]) {
+      aktuelleFrage = index;
+      anzeigen();
+      return;
+    }
+  }
+}
+
+filterButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    aktuellerFilter = button.dataset.filter;
+    filterButtons.forEach((item) =>
+      item.classList.toggle("aktiv", item === button)
+    );
+    aktualisiereFragenListe();
+  });
+});
+
+sortierungElement.addEventListener("change", () => {
+  aktuelleSortierung = sortierungElement.value;
+  aktualisiereFragenListe();
+});
+
+naechsteOffeneButton.addEventListener("click", naechsteOffeneFrage);
 
 function anzeigen() {
   const quiz = quizzes[aktuellesQuiz];
