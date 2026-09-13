@@ -254,7 +254,7 @@ const quizzes = [
     },
     {
       "thema": "FM & LTI",
-      "frage": "Welche Vorteile bietet die Frequenzmodulation gegenüber AM?",
+      "frage": "Warum ist FM kein LTI-System?",
       "antwort": "FM ist kein LTI-System, weil die Ausgangsgröße nicht linear vom Eingangssignal abhängt: Das Nachrichtensignal verändert die Frequenz bzw. die Phase innerhalb einer Cosinusfunktion, sodass das Superpositionsprinzip nicht erfüllt ist."
     },
     {
